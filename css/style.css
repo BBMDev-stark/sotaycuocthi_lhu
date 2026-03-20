@@ -72,8 +72,8 @@
 }
 
 html, body {
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
+  overflow: auto;
   background: #1a1a1a;
   font-family: var(--sans);
   color: var(--ink);
@@ -319,7 +319,8 @@ html, body {
 /* All pages share base styles */
 #flipbook .page {
   background: var(--paper);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   -webkit-user-select: none;
   user-select: none;
   /* Paper texture illusion */
@@ -480,7 +481,7 @@ html, body {
 .pg-body {
   flex: 1;
   padding: 12px var(--pg-pad,22px) 32px;
-  overflow: hidden;
+  overflow-y: auto;
   min-height: 0;
   position: relative;
 }
@@ -1886,4 +1887,60 @@ html, body {
   #topbar, #nav, #preloader { display: none !important; }
   #stage { position: static; padding: 0; }
   .page { break-inside: avoid; }
+}
+
+
+/* ══════════════════════════════════════════════════════
+   SCROLL FIX — Cho phép scroll nội dung mọi màn hình
+══════════════════════════════════════════════════════ */
+
+/* Tất cả trang đều có thể scroll dọc */
+#flipbook .page {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Các vùng nội dung chính: luôn scroll được */
+#flipbook .page .sl-body,
+#flipbook .page .sr-body,
+#flipbook .page .ach-scroll,
+#flipbook .page .intro-body,
+#flipbook .page .toc-body,
+#flipbook .page .pg-body,
+#flipbook .page .pg-sl,
+#flipbook .page .pg-sr,
+#flipbook .page .ach-page {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  max-height: none !important;
+  flex: 1 1 auto !important;
+}
+
+/* Scrollbar mỏng, tinh tế */
+#flipbook .page ::-webkit-scrollbar {
+  width: 3px;
+}
+#flipbook .page ::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,.18);
+  border-radius: 2px;
+}
+#flipbook .page ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Màn hình nhỏ hơn 1024px: thêm scroll cho toàn trang */
+@media (max-width: 1024px) {
+  html, body {
+    overflow: auto !important;
+    min-height: 100% !important;
+  }
+  #stage {
+    overflow: auto !important;
+    position: fixed;
+    inset: 0;
+  }
+  #flipbook .page * {
+    touch-action: pan-y;
+  }
 }
